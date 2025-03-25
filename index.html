@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IQ Test Online</title>
+  <style>
+    /* Global Styles & Animated Gradient Background */
+    body {
+      margin: 0;
+      font-family: Times New Roman, Georgia;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    /* Sections styling */
+    .section {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      animation: fadeIn 3s ease;
+    }
+    .active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Waiting Section */
+    #waitingSection {
+      display: block;
+      position: relative;
+      height: 100vh;
+      width: 100%;
+    }
+    #waitingVideo {
+      width: 150px;
+      height: 150px;
+      margin-top: 20%;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      transition: transform 0.5s ease;
+    }
+    #waitingVideo:hover {
+      transform: scale(1.1);
+    }
+    #startButton {
+      margin-top: 40px;
+      padding: 20px 40px;
+      font-size: 30px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.8);
+      border: points;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    #startButton:hover {
+      background: rgba(255,255,255,2);
+    }
+    /* Quiz Section */
+    #quizSection form {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 5px;
+    }
+    .question p {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .question label {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    #submitQuiz {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      background: #23a6d5;
+      border: none;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    #submitQuiz:hover {
+      background: #1b82b8;
+    }
+    /* Result Section */
+    #resultSection {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #resultContainer {
+      position: relative;
+      width: 300px;
+      height: 150px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 30px;
+      background: #23d5ab;
+      border-radius: 10px;
+      line-height: 150px;
+      color: #000;
+      user-select: none;
+    }
+    #scratchCard {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 150px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    canvas {
+      width: 300px;
+      height: 150px;
+      display: block;
+    }
+    /* Footer */
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Waiting Section with Video Icon -->
+  <div id="waitingSection" class="section active">
+    <button id="startButton">Start Test ↓</button>
+  </div>
+
+  <!-- Quiz Section with 20 Questions -->
+  <div id="quizSection" class="section" align="center">
+    <form id="quizForm">
+      <!-- Question 1 -->
+      <div class="question">
+        <p>1. What is 275 + 275?</p>
+        <label><input type="radio" name="q1" value="4"> 525</label>
+        <label><input type="radio" name="q1" value="4"> 550</label>
+        <label><input type="radio" name="q1" value="5"> 600</label>
+        <label><input type="radio" name="q1" value="6"> 575</label>
+      </div>
+      <!-- Question 2 -->
+      <div class="question">
+        <p>2. √81=? </p>
+        <label><input type="radio" name="q2" value="London"> 6</label>
+        <label><input type="radio" name="q2" value="Berlin"> 3</label>
+        <label><input type="radio" name="q2" value="Paris"> 9</label>
+        <label><input type="radio" name="q2" value="Rome"> 8</label>
+      </div>
+      <!-- Question 3 -->
+      <div class="question">
+        <p>3. What is 10 - 4?</p>
+        <label><input type="radio" name="q3" value="5"> 5</label>
+        <label><input type="radio" name="q3" value="6"> 6</label>
+        <label><input type="radio" name="q3" value="7"> 7</label>
+        <label><input type="radio" name="q3" value="8"> 8</label>
+      </div>
+      <!-- Question 4 -->
+      <div class="question">
+        <p>4. What is the square root of 16?</p>
+        <label><input type="radio" name="q4" value="2"> 2</label>
+        <label><input type="radio" name="q4" value="4"> 4</label>
+        <label><input type="radio" name="q4" value="8"> 8</label>
+        <label><input type="radio" name="q4" value="16"> 16</label>
+      </div>
+      <!-- Question 5 -->
+      <div class="question">
+        <p>5. Which shape has 4 equal sides?</p>
+        <label><input type="radio" name="q5" value="Triangle"> Triangle</label>
+        <label><input type="radio" name="q5" value="Rectangle"> Rectangle</label>
+        <label><input type="radio" name="q5" value="Square"> Square</label>
+        <label><input type="radio" name="q5" value="Circle"> Circle</label>
+      </div>
+      <!-- Question 6 -->
+      <div class="question">
+        <p>6. What is 3 x 3?</p>
+        <label><input type="radio" name="q6" value="6"> 6</label>
+        <label><input type="radio" name="q6" value="7"> 7</label>
+        <label><input type="radio" name="q6" value="8"> 8</label>
+        <label><input type="radio" name="q6" value="9"> 9</label>
+      </div>
+      <!-- Question 7 -->
+      <div class="question">
+        <p>7. What is 12 / 3?</p>
+        <label><input type="radio" name="q7" value="3"> 3</label>
+        <label><input type="radio" name="q7" value="4"> 4</label>
+        <label><input type="radio" name="q7" value="5"> 5</label>
+        <label><input type="radio" name="q7" value="6"> 6</label>
+      </div>
+      <!-- Question 8 -->
+      <div class="question">
+        <p>8. What is the next number: 2, 4, 6, ...?</p>
+        <label><input type="radio" name="q8" value="7"> 7</label>
+        <label><input type="radio" name="q8" value="8"> 8</label>
+        <label><input type="radio" name="q8" value="10"> 10</label>
+        <label><input type="radio" name="q8" value="12"> 12</label>
+      </div>
+      <!-- Question 9 -->
+      <div class="question">
+        <p>9. What is 5 + 7?</p>
+        <label><input type="radio" name="q9" value="10"> 10</label>
+        <label><input type="radio" name="q9" value="11"> 11</label>
+        <label><input type="radio" name="q9" value="12"> 12</label>
+        <label><input type="radio" name="q9" value="13"> 13</label>
+      </div>
+      <!-- Question 10 -->
+      <div class="question">
+        <p>10. What is 15 - 5?</p>
+        <label><input type="radio" name="q10" value="8"> 8</label>
+        <label><input type="radio" name="q10" value="9"> 9</label>
+        <label><input type="radio" name="q10" value="10"> 10</label>
+        <label><input type="radio" name="q10" value="11"> 11</label>
+      </div>
+      <!-- Question 11 -->
+      <div class="question">
+        <p>11. What is 7 + 3?</p>
+        <label><input type="radio" name="q11" value="9"> 9</label>
+        <label><input type="radio" name="q11" value="10"> 10</label>
+        <label><input type="radio" name="q11" value="11"> 11</label>
+        <label><input type="radio" name="q11" value="12"> 12</label>
+      </div>
+      <!-- Question 12 -->
+      <div class="question">
+        <p>12. Which of these is a prime number?</p>
+        <label><input type="radio" name="q12" value="4"> 4</label>
+        <label><input type="radio" name="q12" value="6"> 6</label>
+        <label><input type="radio" name="q12" value="7"> 7</label>
+        <label><input type="radio" name="q12" value="9"> 9</label>
+      </div>
+      <!-- Question 13 -->
+      <div class="question">
+        <p>13. What is 8 x 2?</p>
+        <label><input type="radio" name="q13" value="12"> 12</label>
+        <label><input type="radio" name="q13" value="14"> 14</label>
+        <label><input type="radio" name="q13" value="16"> 16</label>
+        <label><input type="radio" name="q13" value="18"> 18</label>
+      </div>
+      <!-- Question 14 -->
+      <div class="question">
+        <p>14. What is 20 / 5?</p>
+        <label><input type="radio" name="q14" value="2"> 2</label>
+        <label><input type="radio" name="q14" value="3"> 3</label>
+        <label><input type="radio" name="q14" value="4"> 4</label>
+        <label><input type="radio" name="q14" value="5"> 5</label>
+      </div>
+      <!-- Question 15 -->
+      <div class="question">
+        <p>15. What is the next number: 1, 3, 5, ...?</p>
+        <label><input type="radio" name="q15" value="6"> 6</label>
+        <label><input type="radio" name="q15" value="7"> 7</label>
+        <label><input type="radio" name="q15" value="8"> 8</label>
+        <label><input type="radio" name="q15" value="9"> 9</label>
+      </div>
+      <!-- Question 16 -->
+      <div class="question">
+        <p>16. What is 9 - 3?</p>
+        <label><input type="radio" name="q16" value="5"> 5</label>
+        <label><input type="radio" name="q16" value="6"> 6</label>
+        <label><input type="radio" name="q16" value="7"> 7</label>
+        <label><input type="radio" name="q16" value="8"> 8</label>
+      </div>
+      <!-- Question 17 -->
+      <div class="question">
+        <p>17. What is 6 / 2?</p>
+        <label><input type="radio" name="q17" value="1"> 1</label>
+        <label><input type="radio" name="q17" value="2"> 2</label>
+        <label><input type="radio" name="q17" value="3"> 3</label>
+        <label><input type="radio" name="q17" value="4"> 4</label>
+      </div>
+      <!-- Question 18 -->
+      <div class="question">
+        <p>18. What is 5 x 2?</p>
+        <label><input type="radio" name="q18" value="8"> 8</label>
+        <label><input type="radio" name="q18" value="9"> 9</label>
+        <label><input type="radio" name="q18" value="10"> 10</label>
+        <label><input type="radio" name="q18" value="11"> 11</label>
+      </div>
+      <!-- Question 19 -->
+      <div class="question">
+        <p>19. What is 14 - 7?</p>
+        <label><input type="radio" name="q19" value="5"> 5</label>
+        <label><input type="radio" name="q19" value="6"> 6</label>
+        <label><input type="radio" name="q19" value="7"> 7</label>
+        <label><input type="radio" name="q19" value="8"> 8</label>
+      </div>
+      <!-- Question 20 -->
+      <div class="question">
+        <p>20. What is 3 + 5?</p>
+        <label><input type="radio" name="q20" value="7"> 7</label>
+        <label><input type="radio" name="q20" value="8"> 8</label>
+        <label><input type="radio" name="q20" value="9"> 9</label>
+        <label><input type="radio" name="q20" value="10"> 10</label>
+      </div>
+      <!-- Action Button to Submit the Quiz -->
+      <button type="button" id="submitQuiz">Submit Test</button>
+          <h2>Scratch To See Your Score</h2>
+    </form>
+  </div>
+  <!-- Result Section with Scratch Card Reveal -->
+  <div id="resultSection" class="section">
+    <div id="resultContainer">
+      <div id="resultText">🪄</div>
+      <div id="scratchCard">
+        <canvas id="scratchCanvas"></canvas>
+      </div>
+    </div>
+<button 
+    id="restartButton" 
+    style="padding:10px 20px; font-size:16px; cursor:pointer; background:#23a6d5; border:none; border-radius:5px;"
+    onclick="scrollToTop()"
+>
+    Restart Test
+</button>
+
+<script>
+    // JavaScript function to scroll to the top of the page
+    function scrollToTop() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+    }
+</script>
+  </div>
+
+  <footer>
+    &copy; S.H art© All rights are reserved®
+  </footer>
+
+  <script>
+    // JavaScript to handle section transitions, quiz scoring, and the scratch card effect
+
+    // Sections
+    const waitingSection = document.getElementById('waitingSection');
+    const quizSection = document.getElementById('quizSection');
+    const resultSection = document.getElementById('resultSection');
+
+    // Buttons
+    const startButton = document.getElementById('startButton');
+    const submitQuiz = document.getElementById('submitQuiz');
+    const restartButton = document.getElementById('restartButton');
+
+    // Video element
+    const waitingVideo = document.getElementById('waitingVideo');
+
+    // Quiz Form and Results
+    const quizForm = document.getElementById('quizForm');
+    const resultText = document.getElementById('resultText');
+
+    // Correct answers for each question
+    const correctAnswers = {
+      q1: "4",
+      q2: "Paris",
+      q3: "6",
+      q4: "4",
+      q5: "Square",
+      q6: "9",
+      q7: "4",
+      q8: "8",
+      q9: "12",
+      q10: "10",
+      q11: "10",
+      q12: "7",
+      q13: "16",
+      q14: "4",
+      q15: "7",
+      q16: "6",
+      q17: "3",
+      q18: "10",
+      q19: "7",
+      q20: "8"
+    };
+
+    // Start Test: hide waiting, show quiz
+    startButton.addEventListener('click', () => {
+      waitingSection.classList.remove('active');
+      quizSection.classList.add('active');
+    });
+
+    // Process Quiz Results and Show Scratch Card
+    submitQuiz.addEventListener('click', () => {
+      let score = 0;
+      for (let i = 1; i <= 20; i++) {
+        const radios = document.getElementsByName('q' + i);
+        radios.forEach(radio => {
+          if (radio.checked && radio.value === correctAnswers['q' + i]) {
+            score++;
+          }
+        });
+      }
+      // Calculate IQ level (for demonstration: range 90 to 150)
+      const iq =score;
+      resultText.innerHTML = "Your score is: " + iq;
+      
+      // Hide quiz and show result section
+      quizSection.classList.remove('active');
+      resultSection.classList.add('active');
+      initScratchCard();
+    });
+
+    // Restart Test: reload the page
+    restartButton.addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    // Scratch Card Effect
+    const canvas = document.getElementById('scratchCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let scratchCount = 0;
+    const threshold = 50; // number of scratch moves after which the cover is removed
+
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+
+    function initScratchCard() {
+      resizeCanvas();
+      // Fill canvas with gray color (cover)
+      ctx.fillStyle = "#ccc";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Set composite for scratching
+      ctx.globalCompositeOperation = "destination-out";
+    }
+
+    function getPointerPos(e) {
+      let rect = canvas.getBoundingClientRect();
+      let x, y;
+      if (e.touches) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+      } else {
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+      }
+      return { x, y };
+    }
+
+    function startScratch(e) {
+      isDrawing = true;
+      scratch(e);
+    }
+    function scratch(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      let pos = getPointerPos(e);
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 15, 0, Math.PI * 2);
+      ctx.fill();
+      scratchCount++;
+      if (scratchCount > threshold) {
+        // Fade out the canvas (reveal result)
+        canvas.style.transition = "opacity 1s ease";
+        canvas.style.opacity = 0;
+      }
+    }
+    function endScratch() {
+      isDrawing = false;
+    }
+
+    // Event Listeners for mouse and touch events
+    canvas.addEventListener("mousedown", startScratch);
+    canvas.addEventListener("mousemove", scratch);
+    canvas.addEventListener("mouseup", endScratch);
+    canvas.addEventListener("touchstart", startScratch);
+    canvas.addEventListener("touchmove", scratch);
+    canvas.addEventListener("touchend", endScratch);
+  </script>
+</body>
+</html>
